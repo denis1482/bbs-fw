@@ -742,7 +742,7 @@ namespace BBSFW.Model
 				ValidateLimits(StandardAssistLevels[i].MaxCurrentPercent, 0, 100, $"Standard (Level {i}): Target Power (%)");
 				ValidateLimits(StandardAssistLevels[i].MaxThrottlePercent, 0, 100, $"Standard (Level {i}): Max Throttle (%)");
 				ValidateLimits(StandardAssistLevels[i].MaxCadencePercent, 0, 100, $"Standard (Level {i}): Max Cadence (%)");
-				ValidateLimits(StandardAssistLevels[i].MaxSpeedPercent, 0, 100, $"Standard (Level {i}): Max Speed (%)");
+				ValidateLimits(StandardAssistLevels[i].MaxSpeedPercent, 0, 101, $"Standard (Level {i}): Max Speed (%)");
 				ValidateLimits((uint)StandardAssistLevels[i].TorqueAmplificationFactor, 0, 25, $"Standard (Level {i}): Torque Amplification");
 			}
 
