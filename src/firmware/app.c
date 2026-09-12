@@ -87,6 +87,8 @@ void app_init()
 	motor_disable();
 	lights_disable();
 	lights_set(g_config.lights_mode == LIGHTS_MODE_ALWAYS_ON);
+	if(g_config.lights_mode == LIGHTS_MODE_DEFAULT)
+		lights_set(true);
 
 	lvc_voltage_x100 = g_config.low_cut_off_v * 100u;
 
