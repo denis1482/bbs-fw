@@ -498,6 +498,7 @@ void apply_cruise(uint8_t* target_current, uint8_t throttle_percent)
 		{
 			cruise_paused = false;
 			cruise_block_throttle_return = true;
+			reload_assist_params();
 		}
 
 		// reset flag tracking throttle to make sure throttle returns to idle position before engage/disenage cruise with throttle touch
@@ -943,7 +944,10 @@ void reload_assist_params()
 	{
 		assist_level_data.level = g_config.assist_levels[operation_mode][assist_level];
 
-		assist_level_data.max_wheel_speed_rpm_x10 = ((int32_t)global_speed_limit_rpm * assist_level_data.level.max_speed_percent) / 10;
+		if (assist_level_data.level.max_speed_percent == 0)
+			assist_level_data.max_wheel_speed_rpm_x10 = speed_sensor_get_rpm_x10();
+		else
+			assist_level_data.max_wheel_speed_rpm_x10 = ((int32_t)global_speed_limit_rpm * assist_level_data.level.max_speed_percent) / 10;
 
 		if (assist_level_data.level.flags & ASSIST_FLAG_PAS)
 		{
@@ -953,7 +957,8 @@ void reload_assist_params()
 		}
 
 		// pause cruise if swiching level
-		cruise_paused = true;
+		if(!(assist_level_data.level.flags & ASSIST_FLAG_CRUISE))
+			cruise_paused = true;
 	}
 	// only apply push walk params if push walk is active in config,
 	// otherwise data of previous assist level is kept.
