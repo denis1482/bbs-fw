@@ -18,6 +18,8 @@
 #include "util.h"
 #include "system.h"
 
+#define CRUISE_THROTTLE_VALUE_PERCENT		25
+
 
 typedef struct
 {
@@ -493,8 +495,8 @@ void apply_cruise(uint8_t* target_current, uint8_t throttle_percent)
 			cruise_block_throttle_return = true;
 		}
 
-		// unpause cruise if pedaling forward while engaging throttle > 50%
-		else if (cruise_paused && !cruise_block_throttle_return && throttle_percent > 50 && pas_is_pedaling_forwards() && pas_get_pulse_counter() > CRUISE_ENGAGE_PAS_PULSES)
+		// unpause cruise if pedaling forward while engaging throttle > CRUISE_THROTTLE_VALUE_PERCENT
+		else if (cruise_paused && !cruise_block_throttle_return && throttle_percent > CRUISE_THROTTLE_VALUE_PERCENT && pas_is_pedaling_forwards() && pas_get_pulse_counter() > CRUISE_ENGAGE_PAS_PULSES)
 		{
 			cruise_paused = false;
 			cruise_block_throttle_return = true;
@@ -523,7 +525,7 @@ void apply_cruise(uint8_t* target_current, uint8_t throttle_percent)
 
 bool apply_throttle(uint8_t* target_current, uint8_t throttle_percent)
 {
-	if ((assist_level_data.level.flags & ASSIST_FLAG_THROTTLE) && throttle_percent > 0 && throttle_ok())
+	if (((assist_level_data.level.flags & ASSIST_FLAG_THROTTLE) || (assist_level_data.level.flags & ASSIST_FLAG_CRUISE)) && throttle_percent > 0 && throttle_ok())
 	{
 		uint8_t current = (uint8_t)MAP16(throttle_percent, 0, 100, g_config.throttle_start_percent, assist_level_data.level.max_throttle_current_percent);
 
